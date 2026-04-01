@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>王者荣耀 AI 游戏辅助助手</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <section class="login-shell" id="login-shell">
+    <div class="login-stage">
+      <article class="hero-card login-panel standalone-login">
+        <p class="eyebrow">Step 01</p>
+        <h1>登录并绑定王者荣耀账号</h1>
+        <p class="panel-copy">先完成登录与账号绑定，再由 AI 读取近期战绩、分路偏好与在线时长，生成专属难度推荐和训练节奏。</p>
+        <div class="login-tabs">
+          <button class="chip active">账号密码</button>
+          <button class="chip">手机号验证</button>
+        </div>
+        <form class="login-form">
+          <label>
+            账号 ID
+            <input type="text" value="LIF_xiaobai_17" aria-label="账号 ID">
+          </label>
+          <label>
+            安全验证
+            <input type="password" value="123456789" aria-label="安全验证">
+          </label>
+          <button type="button" class="primary-button wide" id="login-enter-button">登录并进入助手</button>
+        </form>
+        <div class="bind-options">
+          <button class="bind-button">绑定微信</button>
+          <button class="bind-button">绑定 QQ</button>
+          <button class="bind-button">导入战绩 UID</button>
+        </div>
+        <div class="permission-card">
+          <p class="eyebrow">授权范围</p>
+          <ul class="permission-list">
+            <li>读取近 10 场战绩与英雄使用偏好</li>
+            <li>分析近 7 日在线时长与深夜对局比例</li>
+            <li>生成 AI 陪练难度与训练模式建议</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="hero-card preview-panel login-preview">
+        <p class="eyebrow">LIF.AI</p>
+        <h2>王者荣耀智能辅助助手</h2>
+        <p class="panel-copy">登录后才展示玩家数据。系统会基于近期表现，自动判断你更适合稳态进阶、高压对抗还是恢复训练。</p>
+        <div class="radar-card">
+          <div class="radar-ring ring-one"></div>
+          <div class="radar-ring ring-two"></div>
+          <div class="radar-center">
+            <span>AI 状态</span>
+            <strong>等待授权</strong>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <div class="app-shell app-hidden" id="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <p class="brand-mark">LIF.AI</p>
+        <h1>王者荣耀智能辅助助手</h1>
+        <p>读取玩家表现，动态推荐最合适的 AI 对抗难度。</p>
+      </div>
+      <nav class="nav-list" aria-label="页面导航">
+        <button class="nav-button active" data-screen="lobby">游戏初始界面</button>
+        <button class="nav-button" data-screen="dashboard">玩家仪表盘</button>
+        <button class="nav-button" data-screen="time">游玩时间记录</button>
+      </nav>
+      <section class="sidebar-panel">
+        <p class="eyebrow">AI 当前判断</p>
+        <h2 id="sidebar-difficulty-label">稳态进阶</h2>
+        <p id="sidebar-difficulty-copy">近期数据稳定，建议保持中高压对抗来提升节奏转换能力。</p>
+        <div class="confidence">
+          <span>推荐置信度</span>
+          <strong id="sidebar-confidence">86%</strong>
+        </div>
+      </section>
+    </aside>
+
+    <main class="main-stage">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Honor of Kings Adaptive AI Prototype</p>
+          <h2>玩家状态感知 -> AI 分析 -> 动态调难度</h2>
+        </div>
+        <div class="topbar-actions">
+          <button class="ghost-button" id="recalibrate-button">重新校准 AI 难度</button>
+          <button class="primary-button" id="apply-button">应用推荐难度</button>
+        </div>
+      </header>
+
+      <section class="screen active" id="screen-lobby" data-screen="lobby">
+        <div class="screen-grid lobby-grid">
+          <article class="panel feature-panel">
+            <p class="eyebrow">Welcome Back</p>
+            <h3 id="lobby-greeting"></h3>
+            <p id="lobby-summary" class="panel-copy"></p>
+            <div class="feature-strip">
+              <div><span>当前段位</span><strong id="lobby-rank"></strong></div>
+              <div><span>常用英雄</span><strong id="lobby-heroes"></strong></div>
+              <div><span>今日建议</span><strong id="lobby-mode"></strong></div>
+            </div>
+            <div class="cta-row">
+              <button class="primary-button nav-jump" data-target="dashboard">查看玩家仪表盘</button>
+              <button class="ghost-button nav-jump" data-target="time">本周时长记录</button>
+            </div>
+          </article>
+          <article class="panel ai-spotlight">
+            <p class="eyebrow">AI Spotlight</p>
+            <h3 id="lobby-difficulty"></h3>
+            <p id="lobby-difficulty-copy" class="panel-copy"></p>
+            <div class="difficulty-meter"><div class="difficulty-fill" id="lobby-difficulty-fill"></div></div>
+            <div class="tag-row" id="lobby-tags"></div>
+          </article>
+          <article class="panel timeline-panel">
+            <p class="eyebrow">Recent Signals</p>
+            <h3>近 7 日状态摘要</h3>
+            <div id="recent-signal-list" class="timeline-list"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="screen" id="screen-dashboard" data-screen="dashboard">
+        <div class="screen-grid dashboard-grid">
+          <article class="panel metrics-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Performance Snapshot</p>
+                <h3>玩家核心指标</h3>
+              </div>
+              <span class="status-pill" id="dashboard-status"></span>
+            </div>
+            <div class="metric-grid" id="metric-grid"></div>
+          </article>
+          <article class="panel chart-panel">
+            <p class="eyebrow">Trend Analysis</p>
+            <h3>近 7 日 AI 关注趋势</h3>
+            <div class="chart-wrapper"><div class="chart-bars" id="performance-chart"></div></div>
+            <div class="chart-legend">
+              <span><i class="legend-dot blue"></i>综合表现指数</span>
+              <span><i class="legend-dot gold"></i>疲劳影响系数</span>
+            </div>
+          </article>
+          <article class="panel explanation-panel">
+            <p class="eyebrow">Explainable AI</p>
+            <h3>AI 如何得出当前难度</h3>
+            <div class="pipeline" id="ai-pipeline"></div>
+          </article>
+          <article class="panel recommendation-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Difficulty Recommendation</p>
+                <h3 id="recommendation-title"></h3>
+              </div>
+              <span class="confidence-badge" id="recommendation-confidence"></span>
+            </div>
+            <p id="recommendation-summary" class="panel-copy"></p>
+            <div class="recommendation-grid">
+              <div><span>适合模式</span><strong id="recommendation-mode"></strong></div>
+              <div><span>建议训练方向</span><strong id="recommendation-training"></strong></div>
+              <div><span>调整前后</span><strong id="recommendation-delta"></strong></div>
+              <div><span>重点触发因素</span><strong id="recommendation-trigger"></strong></div>
+            </div>
+            <div class="tag-row" id="reason-tags"></div>
+            <div class="adjustment-log" id="adjustment-log"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="screen" id="screen-time" data-screen="time">
+        <div class="screen-grid time-grid">
+          <article class="panel time-summary">
+            <p class="eyebrow">Playtime Tracking</p>
+            <h3>游戏游玩时间记录</h3>
+            <div class="time-cards" id="time-cards"></div>
+          </article>
+          <article class="panel heat-panel">
+            <p class="eyebrow">Week Activity</p>
+            <h3>近 7 日时长分布</h3>
+            <div class="heatmap" id="time-heatmap"></div>
+            <div class="period-insights">
+              <div><span>黄金训练时段</span><strong id="best-period"></strong></div>
+              <div><span>高疲劳时段</span><strong id="fatigue-period"></strong></div>
+            </div>
+          </article>
+          <article class="panel wellness-panel">
+            <p class="eyebrow">Adaptive Control</p>
+            <h3>AI 如何用时长调整难度</h3>
+            <div id="time-ai-link" class="timeline-list"></div>
+            <div class="wellness-alert" id="wellness-alert"></div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
